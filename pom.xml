@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+	<description>
+		This is a simple PaxExam Karaf based test for the PerSuite + Abstract test class bug.
+
+		AbstractClass executes a Test, and the 2 concrete classes return each a different string.
+		Expected: Two different strings in abstract class from two different concrete test classes.
+		Actual result: One of the concrete classes is executed twice, so the same message appears in both test executions.
+	</description>
+
+	<!--
+	<parent>
+		<groupId>de.traxpay</groupId>
+		<artifactId>testtools</artifactId>
+		<version>1.0.0.POM-TESTTOOLS</version>
+	</parent>
+	-->
+	<properties>
+		<karaf.version>4.0.10</karaf.version>
+		<javax-inject.version>1</javax-inject.version>
+		<pax.exam.version>4.11.0</pax.exam.version>
+		<junit.version>4.12</junit.version>
+		<maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
+		<surefire.version>2.18.1</surefire.version> <!-- For some reason, other surefire versions refuse to do PerSuite properly -->
+	</properties>
+
+    <groupId>de.traxpay.testtools.paxexam</groupId>
+    <artifactId>abstract-suite</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+	<packaging>jar</packaging>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven-compiler-plugin.version}</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${surefire.version}</version>
+				<configuration>
+					<includes>
+						<include>**/*.java</include>
+					</includes>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>test</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- Needed if you use versionAsInProject() -->
+			<plugin>
+				<groupId>org.apache.servicemix.tooling</groupId>
+				<artifactId>depends-maven-plugin</artifactId>
+				<version>1.2</version>
+				<executions>
+					<execution>
+						<id>generate-depends-file</id>
+						<goals>
+							<goal>generate-depends-file</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.karaf</groupId>
+			<artifactId>apache-karaf</artifactId>
+			<version>${karaf.version}</version>
+			<type>zip</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.karaf.features</groupId>
+			<artifactId>standard</artifactId>
+			<version>${karaf.version}</version>
+			<classifier>features</classifier>
+			<type>xml</type>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+			<version>${javax-inject.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.ops4j.pax.exam</groupId>
+			<artifactId>pax-exam-junit4</artifactId>
+			<version>${pax.exam.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.ops4j.pax.exam</groupId>
+			<artifactId>pax-exam-container-karaf</artifactId>
+			<version>${pax.exam.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+    
+</project>
